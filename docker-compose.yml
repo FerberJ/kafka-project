@@ -1,0 +1,46 @@
+version: '3.8'
+
+networks:
+  kafka-nw:
+
+services:
+  redpanda-1:
+    image: docker.redpanda.com/vectorized/redpanda:v23.3.5
+    command: redpanda start --advertise-kafka-addr redpanda-1:9092
+    ports:
+      - "9092:9092"
+    networks:
+      - kafka-nw
+
+  blog-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: vs4tw
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbuser
+      MYSQL_DATABASE: blogdb
+    ports:
+      - "3306:3306"
+    networks:
+      - kafka-nw
+
+  kafka-blog-backend:
+    image: ghcr.io/ferberj/kafka-blog-backend:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - blog-mysql
+      - redpanda-1
+    restart: on-failure
+    networks:
+      - kafka-nw
+
+  kafka-validator:
+    image: ghcr.io/ferberj/kafka-validator:latest
+    ports:
+      - "8085:8085"
+    depends_on:
+      - redpanda-1
+    networks:
+      - kafka-nw
+
