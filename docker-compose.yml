@@ -87,12 +87,19 @@ services:
       - "8080:8080"
     depends_on:
       - blog-mysql
+    environment:
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://blog-mysql:3306/blogdb
+      QUARKUS_DATASOURCE_USERNAME: dbuser
+      QUARKUS_DATASOURCE_PASSWORD: dbuser
+      QUARKUS_KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092   
     restart: on-failure
     networks:
       - redpanda_network
 
   kafka-validator:
     image: ghcr.io/ferberj/kafka-validator:latest
+    environment:
+      QUARKUS_KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092  
     networks:
       - redpanda_network
 
