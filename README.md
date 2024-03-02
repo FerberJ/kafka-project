@@ -1,3 +1,23 @@
+# Message Verifyer
+Erstellt man einen neuen Blog, muss dieser verifiziert werden. 
+Wenn in einem Blog im Content "yolo" vorkommt wird er nicht verifiziert. 
+```json
+[
+  {
+    "content": "string",
+    "id": 1,
+    "title": "string",
+    "valid": true
+  },
+  {
+    "content": "yolo",
+    "id": 2,
+    "title": "string",
+    "valid": false
+  }
+]
+```
+
 # Dev
 Um das Projekt im Dev-Modus zu starten, müssen in zwei Terminals folgende Befehle ausgeführt werden:
 ```bash
