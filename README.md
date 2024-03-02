@@ -34,3 +34,4 @@ Starte alle Container mit Docker Compose.
 
 `docker compose up`
 
+Öffne im Browser die Seite http://localhost:8080
