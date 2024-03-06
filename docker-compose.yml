@@ -31,8 +31,7 @@ services:
       - --memory 1G
       # Mode dev-container uses well-known configuration properties for development in containers.
       - --mode dev-container
-      # Enable logs for debugging.
-      - --default-log-level=debug
+      - --default-log-level=info
     image: docker.redpanda.com/redpandadata/redpanda:v23.3.6
     container_name: redpanda-1
     volumes:
