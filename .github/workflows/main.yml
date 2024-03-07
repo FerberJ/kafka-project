@@ -19,7 +19,7 @@ jobs:
           cache: maven
           
       - name: Access-Rights for maven execution
-        run: chmod +x mvnw
+        run: cd blog-backend && chmod +x mvnw && cd ..
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -34,4 +34,4 @@ jobs:
 
       # Build and Push Native Image over Maven-Wrapper
       - name: Build with Maven Blog-Backend
-        run: cd blog-backend && ./mvnw package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.group=ferberj -Dquarkus.container-image.name=blog-backend -Dquarkus.container-image.registry=ghcr.io -Dquarkus.container-image.tag=latest
+        run: cd blog-backend && ./mvnw package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.group=ferberj -Dquarkus.container-image.name=blog-backend -Dquarkus.container-image.registry=ghcr.io -Dquarkus.container-image.tag=latest %% cd ..
