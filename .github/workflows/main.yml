@@ -34,4 +34,4 @@ jobs:
 
       # Build and Push Native Image over Maven-Wrapper
       - name: Build with Maven Blog-Backend
-        run: cd blog-backend && ./mvnw package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.group=ferberj -Dquarkus.container-image.name=blog-backend -Dquarkus.container-image.registry=ghcr.io -Dquarkus.container-image.tag=latest && cd ..
+        run: cd blog-backend && ./mvnw package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.group=ferberj -Dquarkus.container-image.name=kafka-blog-backend -Dquarkus.container-image.registry=ghcr.io -Dquarkus.container-image.tag=latest && cd ..
