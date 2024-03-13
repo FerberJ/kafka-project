@@ -55,3 +55,20 @@ Starte alle Container mit Docker Compose.
 `docker compose up`
 
 Öffne im Browser die Seite http://localhost:8080
+
+
+
+
+
+
+Ziel der Vertiefungsarbeit
+- Der Benutzer kann weiterhin normal einen Blog erstellen
+  - Ergänze DTO
+- Der Benutzer kann eine Datei für den Blog erfassen und zuweisen
+- Der Benutzer kann eine Datei erfassen
+- Der Benutzer kann Alle Dateien abrufen 
+
+
+Start minio docker:
+docker run -p 9000:9000 -p 9001:9001 \
+  quay.io/minio/minio server /data --console-address ":9001"
