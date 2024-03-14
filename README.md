@@ -68,7 +68,8 @@ Ziel der Vertiefungsarbeit
 - Der Benutzer kann eine Datei erfassen
 - Der Benutzer kann Alle Dateien abrufen 
 
-
+https://github.com/minio/minio/blob/master/docs/docker/README.md
 Start minio docker:
 docker run -p 9000:9000 -p 9001:9001 \
+  -v miniov:/data \
   quay.io/minio/minio server /data --console-address ":9001"
