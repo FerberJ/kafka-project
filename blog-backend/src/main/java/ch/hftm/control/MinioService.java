@@ -8,6 +8,7 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import ch.hftm.entity.GetResponse;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
 import io.minio.MakeBucketArgs;
@@ -22,10 +23,14 @@ import io.minio.StatObjectResponse;
 public class MinioService {
     private static final long PART_SIZE = 50 * 1024 * 1024;
 
+    /*
     private final MinioClient minioClient = MinioClient.builder()
-            .endpoint("http://localhost:9000")
-            .credentials("RBkZYDO1WQB7U5C2KxwL", "GiaG65DeUjpFXU9jMVBgriB7RqBNcs48s60gwmUC")
-            .build();
+    .endpoint("http://localhost:9000")
+    .credentials("v080lg3567Rf9gFgbmRD", "Y07nAXyKJ2yYZGN1bY2pd6arZhtYf78cKKRgl1bP")
+    .build();
+    */
+    @Inject
+    MinioClient minioClient;
 
     public String addFile(FileUpload file, String bucketName) throws Exception {
 

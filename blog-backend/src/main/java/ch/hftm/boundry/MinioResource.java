@@ -5,6 +5,7 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import ch.hftm.control.MinioService;
 import ch.hftm.entity.GetResponse;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -15,12 +16,14 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/minio")
 public class MinioResource {
+
+    @Inject
+    MinioService minioService;
+
     public static final String BUCKET_NAME = "test";
 
     @POST
-    @Path("{blogid}")
     public String addObject(@RestForm("file") FileUpload file, @PathParam("blogid") int blogid) throws Exception {
-        MinioService minioService = new MinioService();
         return minioService.addFile(file, BUCKET_NAME);
     }
 
@@ -28,14 +31,12 @@ public class MinioResource {
     @DELETE
     @Path("/{filename}")
     public String deleteObject(@PathParam("filename") String filename) throws Exception {
-        MinioService minioService = new MinioService();
         return minioService.deleteFile(filename, BUCKET_NAME);
     }
 
     @GET
     @Path("/{filename}")
     public Response getObject(@PathParam("filename") String filename, @QueryParam("download") boolean download) {
-        MinioService minioService = new MinioService();
         try {
             
 

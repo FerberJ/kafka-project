@@ -3,6 +3,8 @@ package ch.hftm.control;
 import java.util.List;
 import java.util.Optional;
 
+import ch.hftm.control.dto.BlogDto.NewBlogDto;
+import ch.hftm.control.mapper.BlogMapper;
 import ch.hftm.entity.Blog;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -24,7 +26,8 @@ public class BlogService {
     }
 
     @Transactional
-    public long addBlog(Blog blog) {
+    public long addBlog(NewBlogDto blogDto) {
+        Blog blog = new BlogMapper().toValidBlog(blogDto);
         blogRepository.persist(blog);
         return blog.getId();
     }

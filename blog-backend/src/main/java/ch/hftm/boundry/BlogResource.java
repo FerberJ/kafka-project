@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import ch.hftm.control.BlogService;
+import ch.hftm.control.dto.BlogDto.NewBlogDto;
 import ch.hftm.entity.Blog;
 import ch.hftm.entity.Message;
 
@@ -39,9 +40,7 @@ public class BlogResource {
     }
     
     @POST
-    public Response addBlog(Blog blog, @Context UriInfo uriInfo) {
-        blog.setValid(false);
-        blog.setId(null);
+    public Response addBlog(NewBlogDto blog, @Context UriInfo uriInfo) {
         long id = this.blogService.addBlog(blog);
         var uri = uriInfo.getAbsolutePathBuilder().path(Long.toString(id)).build();
 
