@@ -35,9 +35,10 @@ public class Blog {
     private List<BlogFile> files;
    
 
-    public Blog(String title, String content) {
+    public Blog(String title, String content, List<BlogFile> files) {
         this.title = title;
         this.content = content;
+        this.files = files;
         this.valid = false;
     }
 }

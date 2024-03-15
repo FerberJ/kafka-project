@@ -15,6 +15,9 @@ public class BlogService {
     @Inject
     BlogRepository blogRepository;
 
+    @Inject
+    BlogMapper blogMapper;
+
     public List<Blog> getBlogs() {
         var blogs = blogRepository.listAll();
         return blogs;
@@ -27,7 +30,7 @@ public class BlogService {
 
     @Transactional
     public long addBlog(NewBlogDto blogDto) {
-        Blog blog = new BlogMapper().toValidBlog(blogDto);
+        Blog blog = blogMapper.toValidBlog(blogDto);
         blogRepository.persist(blog);
         return blog.getId();
     }
