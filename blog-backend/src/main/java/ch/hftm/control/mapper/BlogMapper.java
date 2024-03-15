@@ -16,7 +16,6 @@ public class BlogMapper {
     BlogFileService blogFileService;
 
     public Blog toValidBlog(NewBlogDto blogDto) {
-
         List<BlogFile> blogFiles = new ArrayList<>();
         for (int fileId : blogDto.getFiles()) {
             BlogFile blogFile = blogFileService.getBlogFile(fileId)
@@ -25,7 +24,6 @@ public class BlogMapper {
                 blogFiles.add(blogFile);
             }
         }
-
         return new Blog(blogDto.getTitle(), blogDto.getContent(), blogFiles);
     }
 }

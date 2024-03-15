@@ -4,7 +4,6 @@ import java.util.List;
 
 import ch.hftm.control.BlogFileService;
 import ch.hftm.entity.BlogFile;
-import ch.hftm.entity.Message;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;

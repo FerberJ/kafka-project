@@ -3,17 +3,23 @@ package ch.hftm.control;
 
 import java.util.List;
 import java.util.Optional;
+
+import ch.hftm.control.dto.BlogDto.NewBlogDto;
+import ch.hftm.control.dto.BlogFileDto.NewBlogFileDto;
+import ch.hftm.control.mapper.BlogFileMapper;
 import ch.hftm.entity.BlogFile;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 
-@ApplicationScoped
+@Dependent
 public class BlogFileService {
         @Inject 
         BlogFileRepository blogFileRepository;
+
+        @Inject
+        BlogFileMapper blogFileMapper;
 
         public Optional<BlogFile> getBlogFile(long id) {
             var blogFile = blogFileRepository.findByIdOptional(id);
@@ -26,7 +32,8 @@ public class BlogFileService {
         }
 
         @Transactional
-        public long addBlogFile(BlogFile blogFile) {
+        public long addBlogFile(NewBlogFileDto blogFileDto) {
+            BlogFile blogFile = blogFileMapper.toValidBlogFile(blogFileDto);
             blogFileRepository.persist(blogFile);
             return blogFile.getId();
         }
