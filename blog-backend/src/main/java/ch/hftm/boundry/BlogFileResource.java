@@ -3,6 +3,7 @@ package ch.hftm.boundry;
 import java.util.List;
 
 import ch.hftm.control.BlogFileService;
+import ch.hftm.control.dto.BlogFileDto.NewBlogFileDto;
 import ch.hftm.entity.BlogFile;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,8 +30,8 @@ public class BlogFileResource {
     }
 
     @POST
-    public Response addBlogFile(BlogFile blogFile, @Context UriInfo uriInfo) {
-        long id = this.blogFileService.addBlogFile(blogFile);
+    public Response addBlogFile(NewBlogFileDto blogFileDto, @Context UriInfo uriInfo) {
+        long id = this.blogFileService.addBlogFile(blogFileDto);
         var uri = uriInfo.getAbsolutePathBuilder().path(Long.toString(id)).build();
 
         Response response = Response.created(uri).build();

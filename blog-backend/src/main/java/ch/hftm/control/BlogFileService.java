@@ -4,7 +4,6 @@ package ch.hftm.control;
 import java.util.List;
 import java.util.Optional;
 
-import ch.hftm.control.dto.BlogDto.NewBlogDto;
 import ch.hftm.control.dto.BlogFileDto.NewBlogFileDto;
 import ch.hftm.control.mapper.BlogFileMapper;
 import ch.hftm.entity.BlogFile;

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class BlogFileDto {
+public interface BlogFileDto {
     @Getter
     @Setter
     @NoArgsConstructor
