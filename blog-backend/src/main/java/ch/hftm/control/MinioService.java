@@ -6,6 +6,7 @@ import java.nio.file.Files;
 
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
+import ch.hftm.control.dto.BlogFileDto.NewBlogFileDto;
 import ch.hftm.entity.GetResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -23,14 +24,11 @@ import io.minio.StatObjectResponse;
 public class MinioService {
     private static final long PART_SIZE = 50 * 1024 * 1024;
 
-    /*
-    private final MinioClient minioClient = MinioClient.builder()
-    .endpoint("http://localhost:9000")
-    .credentials("v080lg3567Rf9gFgbmRD", "Y07nAXyKJ2yYZGN1bY2pd6arZhtYf78cKKRgl1bP")
-    .build();
-    */
     @Inject
     MinioClient minioClient;
+
+    @Inject
+    BlogFileService blogFileService;
 
     public String addFile(FileUpload file, String bucketName) throws Exception {
 
@@ -47,7 +45,10 @@ public class MinioService {
                                     .contentType(file.contentType())
                                     .stream(is, -1, PART_SIZE)
                                     .build());
+            NewBlogFileDto newBlogFileDto = new NewBlogFileDto(bucketName, file.fileName());
+            blogFileService.addBlogFile(newBlogFileDto);
             return response.bucket() + "/" + response.object();
+
         } catch (Exception e) {
             throw new Exception(e);
         }
