@@ -37,6 +37,13 @@ public class MinioService {
     @Inject
     Validation validation;
 
+    // When adding a new File the following steps will be made:
+    // - Check if bucket exists already, if not it wil be created
+    // - Create hashstring of Content from the FileUpload
+    // - Create a random UUID wich will be used as filename
+    // - Check if File with same Hashcode already exists
+    // - If yes just add blogFile entry
+    // - If not, create File in Minio and add blogFile entry
     public String addFile(FileUpload file, String bucketName) throws Exception {
         // Check if bucket already exist
         if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
