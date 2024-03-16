@@ -13,5 +13,7 @@ public interface BlogFileDto {
     public class NewBlogFileDto {
         private String filename;
         private String bucket;
+        private String hashcode;
+        private String displayname;
     }
 }

@@ -21,9 +21,13 @@ public class BlogFile {
     private Long id;
     private String filename;
     private String bucket;
+    private String displayname;
+    private String hashcode;
 
-    public BlogFile(String filename, String bucket) {
+    public BlogFile(String filename, String bucket, String displayname, String hashString) {
         this.filename = filename;
         this.bucket = bucket;
+        this.hashcode = hashString;
+        this.displayname = displayname;
     }
 }
