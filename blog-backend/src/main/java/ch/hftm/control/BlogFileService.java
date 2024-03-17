@@ -42,11 +42,6 @@ public class BlogFileService {
     }
 
     @Transactional
-    public void removeFromNameAndBucket(String bucket, String filename) {
-        blogFileRepository.delete("bucket = ?1 and filename = ?2", bucket, filename);
-    }
-
-    @Transactional
     public String searchHashString(String hashString, String bucket) {
         List<BlogFile> blogFiles = blogFileRepository.find("hashcode = ?1 and bucket = ?2", hashString, bucket).list();
         if (blogFiles.size() > 0) {

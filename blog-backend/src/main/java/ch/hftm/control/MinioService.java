@@ -34,35 +34,12 @@ public class MinioService {
     @Inject
     Validation validation;
 
-    // When adding a new File the following steps will be made:
-    // - Check if bucket exists already, if not it wil be created
-    // - Create hashstring of Content from the FileUpload
-    // - Create a random UUID wich will be used as filename
-    // - Check if File with same Hashcode already exists
-    // - If yes just add blogFile entry
-    // - If not, create File in Minio and add blogFile entry
     public ObjectWriteResponse addFile(byte[] filecontent, String filename, String bucketname, String contentType)
             throws MinioException, IOException, InvalidKeyException, NoSuchAlgorithmException {
         // Check if bucket already exist
         if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketname).build())) {
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketname).build());
         }
-        /*
-         * byte[] content = Files.readAllBytes(file.uploadedFile());
-         * String hashString = validation.getHashCode(content, "SHA-256"); // Get
-         * Hashstring of content
-         * String filename = UUID.randomUUID().toString(); // UUID is used as Filename
-         * NewBlogFileDto newBlogFileDto = new NewBlogFileDto(filename,bucketName,
-         * hashString, file.fileName());
-         * 
-         * String searchedFilename = blogFileService.searchHashString(hashString,
-         * bucketName); // Check if file has already been uploaded
-         * if (searchedFilename != "") {
-         * newBlogFileDto.setFilename(searchedFilename); // Overwrite the filename
-         * blogFileService.addBlogFile(newBlogFileDto);
-         * return bucketName + "/" + searchedFilename;
-         * }
-         */
 
         // Add new File to minio
         InputStream is = new ByteArrayInputStream(filecontent);
@@ -74,20 +51,17 @@ public class MinioService {
                                 .contentType(contentType)
                                 .stream(is, -1, PART_SIZE)
                                 .build());
-        // blogFileService.addBlogFile(newBlogFileDto);
-        return response; // response.bucket() + "/" + response.object();
-
+        return response;
     }
 
-    public String deleteFile(String filename, String bucketName) throws Exception {
+    public void deleteFile(String filename, String bucketName) throws Exception {
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
                             .bucket(bucketName)
                             .object(filename)
                             .build());
-            blogFileService.removeFromNameAndBucket(bucketName, filename);
-            return "File deleted successfully: " + filename;
+            return;
         } catch (Exception e) {
             throw new Exception(e);
         }
