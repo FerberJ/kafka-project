@@ -11,6 +11,8 @@ import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import ch.hftm.control.FileService;
+import ch.hftm.control.dto.BlogDto.NewBlogDto;
+import ch.hftm.control.dto.BlogFileDto.UpdateBlogFileDto;
 import ch.hftm.entity.BlogFile;
 import ch.hftm.entity.GetResponse;
 import ch.hftm.exception.MinioFileNotAddedException;
@@ -19,6 +21,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -112,5 +115,24 @@ public class FileResource {
         } catch (Exception e) {
             return Response.status(500).entity("Internal Server Error").build(); 
         }
+    }
+
+    @PUT
+    @Path("{id}")
+    @APIResponses({ @APIResponse(responseCode = "404", description = "File not found"),
+    @APIResponse(responseCode = "500", description = "Internal Server Error"),
+    @APIResponse(responseCode = "200", description = "Update successfull", content = {
+        @Content(mediaType = "application/json", schema = @Schema(implementation = BlogFile.class))})
+    })
+    public Response updateDisplayname(UpdateBlogFileDto blogFileDto, @PathParam("id") long id) {
+        try {
+            BlogFile blogfile = fileService.updateDisplayname(blogFileDto, id);
+            return Response.ok(blogfile).build();
+        } catch (NotFoundException e) {
+            return Response.status(404).entity(e.getMessage().toString()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Internal Server Error").build(); 
+        }
+        
     }
 }

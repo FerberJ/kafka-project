@@ -16,4 +16,12 @@ public interface BlogFileDto {
         private String hashcode;
         private String displayname;
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class UpdateBlogFileDto {
+        private String displayname;
+    }
 }

@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import ch.hftm.control.dto.BlogFileDto.NewBlogFileDto;
+import ch.hftm.control.dto.BlogFileDto.UpdateBlogFileDto;
 import ch.hftm.entity.BlogFile;
 import ch.hftm.entity.GetResponse;
 import ch.hftm.exception.MinioFileNotAddedException;
@@ -78,5 +79,11 @@ public class FileService {
             } catch (Exception e) {
                 throw new MinioFileNotAddedException(e);
             }
+    }
+
+    public BlogFile updateDisplayname(UpdateBlogFileDto blogFileDto, long id) throws NotFoundException {
+        blogFileService.updateDisplayname(blogFileDto, id);
+        return blogFileService.getBlogFile(id)
+        .orElseThrow(() -> new NotFoundException("File with id " + id + " not found"));
     }
 }
