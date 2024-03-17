@@ -21,7 +21,7 @@ import jakarta.ws.rs.NotFoundException;
 
 @Dependent
 public class FileService {
-    @Inject 
+    @Inject
     BlogFileService blogFileService;
 
     @Inject
@@ -30,7 +30,8 @@ public class FileService {
     @Inject
     Validation validation;
 
-    public BlogFile addFile(FileUpload file, String bucket) throws IOException, NoSuchAlgorithmException, MinioFileNotAddedException {
+    public BlogFile addFile(FileUpload file, String bucket)
+            throws IOException, NoSuchAlgorithmException, MinioFileNotAddedException {
         byte[] fileContent = Files.readAllBytes(file.uploadedFile());
         String hashString = validation.getHashCode(fileContent, "SHA-256");
         String newFileName = UUID.randomUUID().toString();
@@ -69,21 +70,33 @@ public class FileService {
     }
 
     public GetResponse getFileObject(long id) throws NotFoundException, MinioFileNotAddedException {
-        BlogFile blogFile =  blogFileService.getBlogFile(id)
-            .orElseThrow(() -> new NotFoundException("File with id " + id + " not found"));
-       
-            try {
-                GetResponse getResponse = minioService.getFile(blogFile.getFilename(), blogFile.getBucket());
-                getResponse.setBlogFile(blogFile);
-                return getResponse;
-            } catch (Exception e) {
-                throw new MinioFileNotAddedException(e);
-            }
+        BlogFile blogFile = blogFileService.getBlogFile(id)
+                .orElseThrow(() -> new NotFoundException("File with id " + id + " not found"));
+
+        try {
+            GetResponse getResponse = minioService.getFile(blogFile.getFilename(), blogFile.getBucket());
+            getResponse.setBlogFile(blogFile);
+            return getResponse;
+        } catch (Exception e) {
+            throw new MinioFileNotAddedException(e);
+        }
     }
 
     public BlogFile updateDisplayname(UpdateBlogFileDto blogFileDto, long id) throws NotFoundException {
         blogFileService.updateDisplayname(blogFileDto, id);
         return blogFileService.getBlogFile(id)
-        .orElseThrow(() -> new NotFoundException("File with id " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("File with id " + id + " not found"));
+    }
+
+    public void removeFile(long id) throws NotFoundException, Exception {
+        BlogFile blogFile = blogFileService.getBlogFile(id)
+            .orElseThrow(() -> new NotFoundException("File with id " + id + " not found"));
+
+        blogFileService.removeBlogFile(id);
+        
+        String filename = blogFileService.searchHashString(blogFile.getHashcode(), blogFile.getBucket());
+        if (filename != "") {
+            minioService.deleteFile(filename, blogFile.getBucket());
+        }
     }
 }

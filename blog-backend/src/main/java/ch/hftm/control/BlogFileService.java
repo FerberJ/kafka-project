@@ -37,8 +37,8 @@ public class BlogFileService {
     }
 
     @Transactional
-    public void removeBlogFile(BlogFile blogFile) {
-        blogFileRepository.delete(blogFile);
+    public void removeBlogFile(long id) {
+        blogFileRepository.delete("id = ?1", id);
     }
 
     @Transactional

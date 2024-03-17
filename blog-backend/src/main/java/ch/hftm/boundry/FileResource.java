@@ -18,6 +18,7 @@ import ch.hftm.entity.GetResponse;
 import ch.hftm.exception.MinioFileNotAddedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
@@ -133,6 +134,22 @@ public class FileResource {
         } catch (Exception e) {
             return Response.status(500).entity("Internal Server Error").build(); 
         }
-        
+    }
+
+    @DELETE
+    @Path("{id}")
+    @APIResponses({ @APIResponse(responseCode = "404", description = "File not found"),
+    @APIResponse(responseCode = "500", description = "Internal Server Error"),
+    @APIResponse(responseCode = "204", description = "Successfully deleted")
+    })
+    public Response deleteFile(@PathParam("id") long id) {
+        try {
+            fileService.removeFile(id);
+            return Response.noContent().build();
+        } catch (NotFoundException e) {
+            return Response.status(404).entity(e.getMessage().toString()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Internal Server Error").build(); 
+        }
     }
 }
