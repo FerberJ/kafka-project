@@ -62,13 +62,20 @@ Starte alle Container mit Docker Compose.
 
 
 Ziel der Vertiefungsarbeit
-- Der Benutzer kann weiterhin normal einen Blog erstellen
-  - Ergänze DTO
-- Der Benutzer kann eine Datei für den Blog erfassen und zuweisen
-- Der Benutzer kann eine Datei erfassen
-- Der Benutzer kann Alle Dateien abrufen 
+- CRUD für Blog abbilden
+- File dem Blog zuweisen
+  - Der Benutzer kann eine Datei für den Blog erfassen und zuweisen
+- Postman Doku erstellen
+- Webseiter ergänzen mit Postman
+- Docker Compose erstellen
 - Zusätzlicher Endpunkt nur für Bilder
 - Bild dem Blog zuweisen
+
+Done
+- Der Benutzer kann weiterhin normal einen Blog erstellen
+  - Ergänze DTO
+- Der Benutzer kann eine Datei erfassen
+- Der Benutzer kann Alle Dateien abrufen 
 
 https://github.com/minio/minio/blob/master/docs/docker/README.md
 Start minio docker:
