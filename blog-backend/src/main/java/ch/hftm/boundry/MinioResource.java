@@ -1,10 +1,14 @@
 package ch.hftm.boundry;
 
+import java.nio.file.Files;
+import java.util.UUID;
+
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import ch.hftm.control.MinioService;
 import ch.hftm.entity.GetResponse;
+import io.minio.ObjectWriteResponse;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -24,10 +28,14 @@ public class MinioResource {
 
     @POST
     public String addObject(@RestForm("file") FileUpload file, @PathParam("blogid") int blogid) throws Exception {
-        return minioService.addFile(file, BUCKET_NAME);
+        byte[] fileContent = Files.readAllBytes(file.uploadedFile());
+        String filename = file.fileName();
+        String contentType = file.contentType();
+
+        ObjectWriteResponse response = minioService.addFile(fileContent, filename, BUCKET_NAME, contentType);
+        return response.bucket() + "/" + response.object();
     }
 
- 
     @DELETE
     @Path("/{filename}")
     public String deleteObject(@PathParam("filename") String filename) throws Exception {
@@ -38,25 +46,22 @@ public class MinioResource {
     @Path("/{filename}")
     public Response getObject(@PathParam("filename") String filename, @QueryParam("download") boolean download) {
         try {
-            
+            GetResponse getResponse = minioService.getFile(filename, BUCKET_NAME);
+            System.out.println(getResponse.getContentType());
 
-        GetResponse getResponse = minioService.getFile(filename, BUCKET_NAME);
- 
             // Create Header
             if (!download) {
-                return Response.ok(getResponse.stream)
-                        .header("Content-Type", getResponse.contentType)
+                return Response.ok(getResponse.getStream())
+                        .header("Content-Type", getResponse.getContentType())
                         .build();
             } else {
-                return Response.ok(getResponse.stream)
+                return Response.ok(getResponse.getStream())
                         .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
                         .build();
             }
 
-         
-    } catch (Exception e) {
-        return Response.noContent().build();
+        } catch (Exception e) {
+            return Response.noContent().build();
+        }
     }
-    }}
-
-
+}

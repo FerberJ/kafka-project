@@ -31,7 +31,7 @@ public class BlogFileResource {
 
     @POST
     public Response addBlogFile(NewBlogFileDto blogFileDto, @Context UriInfo uriInfo) {
-        long id = this.blogFileService.addBlogFile(blogFileDto);
+        long id = this.blogFileService.addBlogFile(blogFileDto).getId();
         var uri = uriInfo.getAbsolutePathBuilder().path(Long.toString(id)).build();
 
         Response response = Response.created(uri).build();

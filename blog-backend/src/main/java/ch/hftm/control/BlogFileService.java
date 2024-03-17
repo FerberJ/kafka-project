@@ -23,20 +23,18 @@ public class BlogFileService {
         BlogFileMapper blogFileMapper;
 
         public Optional<BlogFile> getBlogFile(long id) {
-            var blogFile = blogFileRepository.findByIdOptional(id);
-            return blogFile;
+            return blogFileRepository.findByIdOptional(id);
         }
 
         public List<BlogFile> getBlogFiles() {
-            var blogFiles = blogFileRepository.listAll();
-            return blogFiles;
+            return blogFileRepository.listAll();
         }
 
         @Transactional
-        public long addBlogFile(NewBlogFileDto blogFileDto) {
+        public BlogFile addBlogFile(NewBlogFileDto blogFileDto) {
             BlogFile blogFile = blogFileMapper.toValidBlogFile(blogFileDto);
             blogFileRepository.persist(blogFile);
-            return blogFile.getId();
+            return blogFile;
         }
 
         @Transactional

@@ -1,15 +1,11 @@
 package ch.hftm.control;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.security.MessageDigest;
-import java.util.Base64;
-import java.util.UUID;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
-import org.jboss.resteasy.reactive.multipart.FileUpload;
-
-import ch.hftm.control.dto.BlogFileDto.NewBlogFileDto;
 import ch.hftm.entity.GetResponse;
 import ch.hftm.utils.Validation;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -23,6 +19,7 @@ import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import io.minio.StatObjectArgs;
 import io.minio.StatObjectResponse;
+import io.minio.errors.MinioException;
 
 @ApplicationScoped
 public class MinioService {
@@ -44,39 +41,42 @@ public class MinioService {
     // - Check if File with same Hashcode already exists
     // - If yes just add blogFile entry
     // - If not, create File in Minio and add blogFile entry
-    public String addFile(FileUpload file, String bucketName) throws Exception {
+    public ObjectWriteResponse addFile(byte[] filecontent, String filename, String bucketname, String contentType)
+            throws MinioException, IOException, InvalidKeyException, NoSuchAlgorithmException {
         // Check if bucket already exist
-        if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+        if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketname).build())) {
+            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketname).build());
         }
-        byte[] content = Files.readAllBytes(file.uploadedFile());
-        String hashString = validation.getHashCode(content, "SHA-256"); // Get Hashstring of content
-        String filename = UUID.randomUUID().toString(); // UUID is used as Filename
-        NewBlogFileDto newBlogFileDto = new NewBlogFileDto(filename,bucketName,  hashString, file.fileName());
-
-        String searchedFilename = blogFileService.searchHashString(hashString, bucketName); // Check if file has already been uploaded
-        if (searchedFilename != "") {
-            newBlogFileDto.setFilename(searchedFilename); // Overwrite the filename
-            blogFileService.addBlogFile(newBlogFileDto);
-            return bucketName + "/" + searchedFilename;
-        } 
+        /*
+         * byte[] content = Files.readAllBytes(file.uploadedFile());
+         * String hashString = validation.getHashCode(content, "SHA-256"); // Get
+         * Hashstring of content
+         * String filename = UUID.randomUUID().toString(); // UUID is used as Filename
+         * NewBlogFileDto newBlogFileDto = new NewBlogFileDto(filename,bucketName,
+         * hashString, file.fileName());
+         * 
+         * String searchedFilename = blogFileService.searchHashString(hashString,
+         * bucketName); // Check if file has already been uploaded
+         * if (searchedFilename != "") {
+         * newBlogFileDto.setFilename(searchedFilename); // Overwrite the filename
+         * blogFileService.addBlogFile(newBlogFileDto);
+         * return bucketName + "/" + searchedFilename;
+         * }
+         */
 
         // Add new File to minio
-        try (InputStream is = new ByteArrayInputStream(content)) {
-            ObjectWriteResponse response = minioClient
-                    .putObject(
-                            PutObjectArgs.builder()
-                                    .bucket(bucketName)
-                                    .object(filename)
-                                    .contentType(file.contentType())
-                                    .stream(is, -1, PART_SIZE)
-                                    .build());
-            blogFileService.addBlogFile(newBlogFileDto);
-            return response.bucket() + "/" + response.object();
+        InputStream is = new ByteArrayInputStream(filecontent);
+        ObjectWriteResponse response = minioClient
+                .putObject(
+                        PutObjectArgs.builder()
+                                .bucket(bucketname)
+                                .object(filename)
+                                .contentType(contentType)
+                                .stream(is, -1, PART_SIZE)
+                                .build());
+        // blogFileService.addBlogFile(newBlogFileDto);
+        return response; // response.bucket() + "/" + response.object();
 
-        } catch (Exception e) {
-            throw new Exception(e);
-        }
     }
 
     public String deleteFile(String filename, String bucketName) throws Exception {
@@ -93,34 +93,28 @@ public class MinioService {
         }
     }
 
-    public GetResponse getFile(String filename, String bucketName) throws Exception {
+    public GetResponse getFile(String filename, String bucketName)
+            throws MinioException, IOException, InvalidKeyException, NoSuchAlgorithmException {
         GetResponse getResponse = new GetResponse();
 
-        try {
-            // Check if the object exists
-            StatObjectResponse stat = minioClient.statObject(
-                    StatObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(filename)
-                            .build());
+        // Check if the object exists
+        StatObjectResponse stat = minioClient.statObject(
+                StatObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(filename)
+                        .build());
 
-            // If the object exists, retrieve it
-            InputStream stream = minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(filename)
-                            .build());
+        // If the object exists, retrieve it
+        InputStream stream = minioClient.getObject(
+                GetObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(filename)
+                        .build());
 
-            // Set appropriate headers for the response
-            getResponse.contentType = stat.contentType();
-            getResponse.stream = stream;
+        // Set appropriate headers for the response
+        getResponse.setContentType(stat.contentType());
+        getResponse.setStream(stream);
 
-            return getResponse;
-        } catch (Exception e) {
-            // Handle other exceptions appropriately
-            throw new Exception(e);
-        }
-
+        return getResponse;
     }
-
 }
