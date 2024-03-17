@@ -115,16 +115,6 @@ public class MinioService {
             getResponse.contentType = stat.contentType();
             getResponse.stream = stream;
 
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] buffer = new byte[8291];
-            int bytesRead;
-            while ((bytesRead = stream.read(buffer)) != -1) {
-                digest.update(buffer, 0, bytesRead);
-            }
-            byte[] hashBytes = digest.digest();
-            var stuff = Base64.getEncoder().encodeToString(hashBytes);
-            System.out.println(stuff);
-
             return getResponse;
         } catch (Exception e) {
             // Handle other exceptions appropriately
