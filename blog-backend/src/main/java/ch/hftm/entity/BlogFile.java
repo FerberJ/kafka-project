@@ -23,6 +23,7 @@ public class BlogFile {
     private String bucket;
     private String displayname;
     private String hashcode;
+    
 
     public BlogFile(String filename, String bucket, String displayname, String hashString) {
         this.filename = filename;

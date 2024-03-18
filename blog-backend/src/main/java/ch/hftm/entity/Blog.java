@@ -34,6 +34,9 @@ public class Blog {
     @JoinColumn(name="BLOG_FILE")
     private List<BlogFile> files;
    
+    public void addBlogFile(BlogFile blogFile) {
+        files.add(blogFile);
+    }
 
     public Blog(String title, String content, List<BlogFile> files) {
         this.title = title;
