@@ -38,7 +38,7 @@ cd blog-backend && ./mvnw verify && cd ..
 # Image vom Content Validator
 cd validator-messager && ./mvnw verify && cd ..
 ```
-
+cd blog-backend && ./mvnw verify && cd .. && cd validator-messager && ./mvnw verify && cd .. && docker push ghcr.io/ferberj/kafka-blog-backend && docker push ghcr.io/ferberj/kafka-validator
 Damit die Images im Github veröffentlicht werden, müssen diese noch gepusht werden.
 ```bash
 # Blog Backend
