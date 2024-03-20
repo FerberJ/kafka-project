@@ -11,7 +11,6 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import ch.hftm.control.dto.BlogFileDto.NewBlogFileDto;
 import ch.hftm.control.dto.BlogFileDto.UpdateBlogFileDto;
-import ch.hftm.entity.Blog;
 import ch.hftm.entity.BlogFile;
 import ch.hftm.entity.GetResponse;
 import ch.hftm.exception.MinioFileNotAddedException;

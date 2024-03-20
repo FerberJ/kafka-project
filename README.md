@@ -62,16 +62,17 @@ Starte alle Container mit Docker Compose.
 
 
 Ziel der Vertiefungsarbeit
-- CRUD für Blog abbilden
-- File dem Blog zuweisen
-  - Der Benutzer kann eine Datei für den Blog erfassen und zuweisen
-- Postman Doku erstellen
-- Webseiter ergänzen mit Postman
 - Docker Compose erstellen
+- CI/CD
 - Zusätzlicher Endpunkt nur für Bilder
 - Bild dem Blog zuweisen
 
 Done
+- Webseiter ergänzen mit Postman
+- Postman Doku erstellen
+- CRUD für Blog abbilden
+- File dem Blog zuweisen
+  - Der Benutzer kann eine Datei für den Blog erfassen und zuweisen
 - Der Benutzer kann weiterhin normal einen Blog erstellen
   - Ergänze DTO
 - Der Benutzer kann eine Datei erfassen
@@ -82,3 +83,5 @@ Start minio docker:
 docker run -p 9000:9000 -p 9001:9001 \
   -v miniov:/data \
   quay.io/minio/minio server /data --console-address ":9001"
+
+https://documenter.getpostman.com/view/24838690/2sA358c5Kg

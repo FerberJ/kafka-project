@@ -11,6 +11,7 @@ import ch.hftm.entity.BlogFile;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 
 @Dependent
 public class BlogService {
@@ -28,8 +29,9 @@ public class BlogService {
         return blogs;
     }
 
-    public Optional<Blog> getBlog(long id) {
-        var blog = blogRepository.findByIdOptional(id);
+    public Blog getBlog(long id) throws NotFoundException {
+        var blog = blogRepository.findByIdOptional(id)
+            .orElseThrow(() -> new NotFoundException());
         return blog;
     }
 
@@ -46,13 +48,13 @@ public class BlogService {
     }
 
     @Transactional
-    public void updateBlog(NewBlogDto newBlogDto, long id) {
-        Blog blog = blogRepository.findById(id);
+    public void updateBlog(NewBlogDto newBlogDto, long id) throws NotFoundException {
+        Blog blog = blogRepository.findByIdOptional(id)
+            .orElseThrow(() -> new NotFoundException());
         blog.setContent(newBlogDto.getContent());
         blog.setTitle(newBlogDto.getTitle());
 
-        List<BlogFile> emptyFile = new ArrayList<>();
-        blog.setFiles(emptyFile);
+        blog.setFiles(new ArrayList<>());
 
         for (int blogFileInt : newBlogDto.getFiles()) {
            BlogFile blogFile = blogFileService.getBlogFile(blogFileInt).orElseGet(null);
@@ -63,17 +65,20 @@ public class BlogService {
     }
 
     @Transactional
-    public void addBlogFile(long blogId, long blogFileId) {
-        Blog blog = blogRepository.findById(blogId);
+    public void addBlogFile(long blogId, long blogFileId) throws NotFoundException {
+        Blog blog = blogRepository.findByIdOptional(blogId)
+            .orElseThrow(()-> new NotFoundException("Blog with id " + blogId + " not found"));
 
-        BlogFile blogFile = blogFileService.getBlogFile(blogFileId).orElse(null);
-        if (blogFile != null) {
-            blog.addBlogFile(blogFile);
-        }
+        BlogFile blogFile = blogFileService.getBlogFile(blogFileId)
+        .orElseThrow(() -> new NotFoundException("File with id " + blogFileId + " not found"));
+        
+        blog.addBlogFile(blogFile);
     }
 
     @Transactional
-    public void removeBlog(long id) {
+    public void removeBlog(long id) throws NotFoundException  {
+        blogRepository.findByIdOptional(id)
+            .orElseThrow(()-> new NotFoundException("Blog with id " + id + " not found"));
         blogRepository.deleteById(id);
     }
 }
