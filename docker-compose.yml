@@ -6,6 +6,7 @@ networks:
     driver: bridge
 volumes:
   redpanda-1: null
+  miniov:
 services:
   redpanda-1:
     command:
@@ -36,6 +37,7 @@ services:
     container_name: redpanda-1
     volumes:
       - redpanda-1:/var/lib/redpanda/data
+
     networks:
       - redpanda_network
     ports:
@@ -69,6 +71,7 @@ services:
 
 
   blog-mysql:
+    container_name: blog-mysql
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: vs4tw
@@ -79,19 +82,28 @@ services:
       - "3306:3306"
     networks:
       - redpanda_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
 
   kafka-blog-backend:
+    container_name: blog-backend
     image: ghcr.io/ferberj/kafka-blog-backend:latest
     ports:
       - "8080:8080"
     depends_on:
-      - blog-mysql
+      blog-mysql:
+        condition: service_healthy
     environment:
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://blog-mysql:3306/blogdb
       QUARKUS_DATASOURCE_USERNAME: dbuser
       QUARKUS_DATASOURCE_PASSWORD: dbuser
-      QUARKUS_KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092   
-    restart: on-failure
+      QUARKUS_KAFKA_BOOTSTRAP_SERVERS: redpanda-1:9092 
+      QUARKUS_MINIO_URL: http://minio:9000
+      QUARKUS_MINIO_ACCESS_KEY: minioadmin
+      QUARKUS_MIMIO_SECRET_KEY: minioadmin
     networks:
       - redpanda_network
 
@@ -102,3 +114,17 @@ services:
     networks:
       - redpanda_network
 
+  minio:
+    container_name: minio
+    image: quay.io/minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - miniov:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - redpanda_network
