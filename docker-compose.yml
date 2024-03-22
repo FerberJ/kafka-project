@@ -104,6 +104,7 @@ services:
       QUARKUS_MINIO_URL: http://minio:9000
       QUARKUS_MINIO_ACCESS_KEY: minioadmin
       QUARKUS_MIMIO_SECRET_KEY: minioadmin
+    restart: on-failure
     networks:
       - redpanda_network
 
