@@ -1,7 +1,6 @@
 package ch.hftm.boundry;
 
 import java.io.IOException;
-import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import ch.hftm.control.FileService;
-import ch.hftm.control.dto.BlogDto.NewBlogDto;
 import ch.hftm.control.dto.BlogFileDto.UpdateBlogFileDto;
 import ch.hftm.entity.BlogFile;
 import ch.hftm.entity.GetResponse;
@@ -48,7 +46,7 @@ public class FileResource {
     @APIResponse(responseCode = "500", description = "Internal Server Error"),
     @APIResponse(responseCode = "503", description = "Minio Service Unavailable"),
     @APIResponse(responseCode = "201", description = "File created", content = {
-    @Content(mediaType = "application/json", schema = @Schema(implementation = BlogFile.class))}) // Replace @Schema with @SchemaRef
+    @Content(mediaType = "application/json", schema = @Schema(implementation = BlogFile.class))}) 
     })
     public Response addFile(@RestForm("file") FileUpload file) {
         try {

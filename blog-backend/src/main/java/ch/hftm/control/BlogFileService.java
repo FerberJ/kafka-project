@@ -3,8 +3,6 @@ package ch.hftm.control;
 import java.util.List;
 import java.util.Optional;
 
-import org.jboss.logging.Logger;
-
 import ch.hftm.control.dto.BlogFileDto.NewBlogFileDto;
 import ch.hftm.control.dto.BlogFileDto.UpdateBlogFileDto;
 import ch.hftm.control.mapper.BlogFileMapper;

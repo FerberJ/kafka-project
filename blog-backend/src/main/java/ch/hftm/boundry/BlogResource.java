@@ -6,7 +6,6 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import ch.hftm.control.BlogService;
 import ch.hftm.control.dto.BlogDto.NewBlogDto;
 import ch.hftm.entity.Blog;
-import ch.hftm.entity.BlogFile;
 import ch.hftm.entity.Message;
 
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;

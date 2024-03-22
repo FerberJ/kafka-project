@@ -2,7 +2,6 @@ package ch.hftm.control;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import ch.hftm.control.dto.BlogDto.NewBlogDto;
 import ch.hftm.control.mapper.BlogMapper;
