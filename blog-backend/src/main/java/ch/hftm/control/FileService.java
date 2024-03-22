@@ -92,11 +92,15 @@ public class FileService {
         BlogFile blogFile = blogFileService.getBlogFile(id)
             .orElseThrow(() -> new NotFoundException("File with id " + id + " not found"));
 
+        String hashCode = blogFile.getHashcode();
+        String bucket = blogFile.getBucket();
+        String filename = blogFile.getFilename();
+
         blogFileService.removeBlogFile(id);
         
-        String filename = blogFileService.searchHashString(blogFile.getHashcode(), blogFile.getBucket());
-        if (filename != "") {
-            minioService.deleteFile(filename, blogFile.getBucket());
+        String searchedFilename = blogFileService.searchHashString(hashCode, bucket);
+        if (searchedFilename.equals("")) {
+            minioService.deleteFile(filename, bucket);
         }
     }
 }
