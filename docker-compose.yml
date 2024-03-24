@@ -7,6 +7,7 @@ networks:
 volumes:
   redpanda-1: null
   miniov:
+  mysql:
 services:
   redpanda-1:
     command:
@@ -87,6 +88,8 @@ services:
       interval: 10s
       timeout: 30s
       retries: 5
+    volumes:
+      - mysql:/var/lib/mysql
 
   kafka-blog-backend:
     container_name: blog-backend
